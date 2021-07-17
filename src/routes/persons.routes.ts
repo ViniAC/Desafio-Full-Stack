@@ -1,25 +1,25 @@
 import { Router } from "express";
 
-import createPersonController from "../modules/person/useCases/createPerson";
-import deletePersonController from "../modules/person/useCases/deletePerson";
-import listPersonController from "../modules/person/useCases/listPersons";
-import updatePersonController from "../modules/person/useCases/updatePerson";
+import { ensureAutenticated } from "../middlewares/ensureAutenticated";
+import { CreatePersonController } from "../modules/person/useCases/createPerson/CreatePersonController";
+import { DeletePersonController } from "../modules/person/useCases/deletePerson/DeletePersonController";
+import { ListPersonController } from "../modules/person/useCases/listPersons/ListPersonController";
+import { UpdatePersonController } from "../modules/person/useCases/updatePerson/UpdatePersonController";
 
 const personsRoutes = Router();
 
-personsRoutes.post("/", (request, response) => {
-    return createPersonController().handle(request, response);
-});
+const createPersonController = new CreatePersonController();
+const deletePersonController = new DeletePersonController();
+const listPersonController = new ListPersonController();
+const updatePersonController = new UpdatePersonController();
 
-personsRoutes.get("/", (request, response) => {
-    return listPersonController().handle(request, response);
-});
+personsRoutes.use(ensureAutenticated);
 
-personsRoutes.put("/", (request, response) => {
-    return updatePersonController().handle(request, response);
-});
-personsRoutes.patch("/", (request, response) => {
-    return deletePersonController().handle(request, response);
-});
+personsRoutes.post("/", createPersonController.handle);
+
+personsRoutes.get("/", listPersonController.handle);
+
+personsRoutes.put("/", updatePersonController.handle);
+personsRoutes.patch("/", deletePersonController.handle);
 
 export { personsRoutes };

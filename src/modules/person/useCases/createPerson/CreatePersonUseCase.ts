@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+
+import AppError from "../../../../errors/AppError";
 import { IPersonsRepository } from "../../repositories/IPersonsRepository";
 
 interface IRequest {
@@ -10,9 +13,12 @@ interface IRequest {
     cpf: string;
     inactive: boolean;
 }
-
+@injectable()
 class CreatePersonUseCase {
-    constructor(private personsRepository: IPersonsRepository) {}
+    constructor(
+        @inject("PersonsRepository")
+        private personsRepository: IPersonsRepository
+    ) {}
     async execute({
         nome,
         sexo,
@@ -27,7 +33,7 @@ class CreatePersonUseCase {
             cpf
         );
         if (personAlreadyExists) {
-            throw new Error("Person already exists!");
+            throw new AppError("Person already exists!");
         }
         this.personsRepository.create({
             nome,

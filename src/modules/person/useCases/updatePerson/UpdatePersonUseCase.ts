@@ -1,3 +1,6 @@
+import { inject, injectable } from "tsyringe";
+
+import AppError from "../../../../errors/AppError";
 import Person from "../../entities/Person";
 import { IPersonsRepository } from "../../repositories/IPersonsRepository";
 
@@ -12,9 +15,12 @@ interface IRequest {
     cpf: string;
     inactive: boolean;
 }
-
+@injectable()
 class UpdatePersonUseCase {
-    constructor(private personsRepository: IPersonsRepository) {}
+    constructor(
+        @inject("PersonsRepository")
+        private personsRepository: IPersonsRepository
+    ) {}
     async execute({
         id,
         nome,
@@ -26,7 +32,7 @@ class UpdatePersonUseCase {
     }: IRequest): Promise<Person> {
         const person = await this.personsRepository.findById(id);
         if (!person) {
-            throw new Error("Person not found!");
+            throw new AppError("Person not found!");
         }
 
         person.nome = nome;
