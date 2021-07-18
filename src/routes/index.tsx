@@ -10,7 +10,9 @@ const Routes: React.FC = () => {
     <Switch>
       <Route path="/" exact component={Login} />
       <Route path="/list" isPrivate component={List} />
-      <Route path="/register" isPrivate component={Register} />
+      <Route path="/register" isPrivate exact component={Register} />
+      <Route path="/register/:id" isPrivate component={Register} />
+
     </Switch>
   );
 };

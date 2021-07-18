@@ -1,8 +1,12 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import styled, { createGlobalStyle } from "styled-components";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
+import DatePicker from 'react-date-picker';
+import api from "../../services/api";
+import { useToast } from '../../hooks/toast';
+
 const Container = styled.div`
     display: flex;
     height: 98vh;
@@ -90,30 +94,117 @@ const Form = styled.form`
     width: 100%;
     align-items: center;
 `;
+const DatePickerContainer = styled.div`
+    display: flex;
+    width: 82%;
+
+    .react-date-picker__wrapper {
+        margin-left: 6px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        border-radius: 2rem;
+        border: 1px;
+        outline: none;
+        color: #3c354e;
+        background-color:white;
+        border-color: rgba(31, 38, 135, 0.37);
+        margin-bottom: 4px;
+  }
+
+`;
 
 
+
+interface Params {
+    id: string;
+  }
+
+  interface Person {
+    nome: string;
+    sexo?: string;
+    email?: string;
+    dataNasc: string;
+    naturalidade?: string;
+    nacionalidade?: string;
+    cpf: string;
+  }
+  const defaultPerson = {
+    nome: '',
+    sexo: '',
+    email: '',
+    dataNasc: '',
+    naturalidade: '',
+    nacionalidade: '',
+    cpf: '',
+  }
 function Register() {
+    const [date, setDate] = useState(new Date());
+    const [person, setPerson] = useState<Person>(defaultPerson);
+    const { id }: Params = useParams();
+    const { addToast } = useToast();
+    useEffect( () => {
+        async function fetchData() {
+        console.log(id)
+        if(id){
+            await api.get(`/persons/${id}`).then((response):Person | void => {
+            const newDate = response.data.dataNasc
+            response.data.dataNasc = new Date(newDate);
+            setPerson(response.data);
+            setDate(new Date(newDate))
+              });
+        }
+    }
+        fetchData()
+    },[id])
+
+    const handleSubmit = async (e: any)=> {
+        e.preventDefault();
+
+        try{
+            console.log(date)
+            setPerson({...person,dataNasc: date.toISOString()})
+            const sendData = {
+                ...person,dataNasc: date.toISOString()
+            }
+            await api.put("/persons", {...sendData}).then((json)=> {
+                    addToast({
+                        type: 'success',
+                        title: 'Sucesso',
+                        description: 'Usuário alterado!',
+                      });
+            });
+        }catch(err){
+            addToast({
+                type: 'error',
+                title: 'Erro',
+                description: "Erro ao alterar usuário",
+              });
+        }
+    }
     return (
         <Container>
             <MainContainer>
                 <RegisterText>Register</RegisterText>
                 <InputContainer>
-                    <Form action="">
-                        <Input type="text" placeholder="Name" required />
-                        <Input type="text" placeholder="Email" />
-                        <Input type="text" placeholder="Sexo" />
-                        <Input
-                            type="text"
-                            placeholder="Data Nascimento"
-                            required
+                    <Form onSubmit={handleSubmit}>
+                        <Input type="text" onChange={(e: React.ChangeEvent<HTMLInputElement>)=> {setPerson({...person,nome:e.target.value})}} value={person.nome}placeholder="Name" required />
+                        <Input type="text" placeholder="Email" onChange={(e: React.ChangeEvent<HTMLInputElement>)=> {setPerson({...person,email:e.target.value})}}value={person.email}/>
+
+                        <DatePickerContainer>
+                        <Input type="text" placeholder="Sexo" onChange={(e: React.ChangeEvent<HTMLInputElement>)=> {setPerson({...person,sexo:e.target.value})}}value={person.sexo}/>
+                        <DatePicker
+                            className="datePicker"
+                            onChange={setDate}
+                            value={date}
+                            format="dd-MM-yyyy"
                         />
-                        <Input type="text" placeholder="Naturalidade" />
-                        <Input type="text" placeholder="Nacionalidade" />
-                        <Input type="text" placeholder="CPF" required />
+                       </DatePickerContainer>
+                        <Input type="text" placeholder="Naturalidade"onChange={(e: React.ChangeEvent<HTMLInputElement>)=> {setPerson({...person,naturalidade:e.target.value})}}value={person.naturalidade} />
+                        <Input type="text" placeholder="Nacionalidade" onChange={(e: React.ChangeEvent<HTMLInputElement>)=> {setPerson({...person,nacionalidade:e.target.value})}}value={person.nacionalidade}/>
+                        <Input type="text" placeholder="CPF" required onChange={(e: React.ChangeEvent<HTMLInputElement>)=> {setPerson({...person,cpf:e.target.value})}}value={person.cpf}/>
                     </Form>
                 </InputContainer>
                 <ButtonContainer>
-                    <Button content="Registrar" />
+                    <Button content={id ? "Salvar" :"Registrar"} onClick={(e: React.ChangeEvent<HTMLInputElement>)=> handleSubmit(e)}></Button>
                 </ButtonContainer>
             </MainContainer>
         </Container>
@@ -121,3 +212,5 @@ function Register() {
 }
 
 export default Register;
+
+

@@ -1,12 +1,14 @@
 import styled from 'styled-components';
 
-interface Props { 
-  content?: string;
-  onClick?:any 
+interface Props {
+    content?: string;
+    onClick?:any
 }
 
-export default function Button({ content,onClick }: Props) {
-  return <StyledButton onClick={onClick}>{content}</StyledButton>;
+
+export default function Button({ content,onClick,...rest}: Props) {
+
+  return <StyledButton onClick={onClick} {...rest} >{content}</StyledButton>;
 }
 
 const StyledButton = styled.button`
