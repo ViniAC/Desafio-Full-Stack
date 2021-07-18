@@ -34,6 +34,8 @@ class UpdatePersonUseCase {
         if (!person) {
             throw new AppError("Person not found!");
         }
+        console.log(dataNasc);
+        console.log(person.dataNasc);
 
         person.nome = nome;
         person.sexo = sexo;
