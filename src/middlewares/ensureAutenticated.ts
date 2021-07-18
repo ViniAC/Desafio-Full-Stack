@@ -10,14 +10,15 @@ export async function ensureAutenticated(
     response: Response,
     next: NextFunction
 ) {
+    console.log("teste");
+    console.log(request.headers);
     const user = await auth(request);
-
+    console.log(user);
     if (!user) {
         throw new AppError("Token missing", 401);
     }
     const usersRepository = new UsersRepository();
     const userBD = await usersRepository.findByName(user.name);
-
     const match = await compare(user.pass, userBD.senha);
     if (!match) {
         throw new AppError("Wrong credentials", 401);
