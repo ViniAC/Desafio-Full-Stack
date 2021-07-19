@@ -34,13 +34,19 @@ const List = () => {
                     title: 'Sucesso',
                     description: 'Usuário deletado com sucesso!',
                   });
+                  const newUsers = users;
+                  if(newUsers){
+                  setUsers(newUsers.filter(item => item.id !== user.id));
+
+                  }
+
 
         });
     }catch(err){
         addToast({
             type: 'error',
             title: 'Erro',
-            description: "Usuário não encontrado",
+            description: err?.response?.data?.message,
           });
     }
 

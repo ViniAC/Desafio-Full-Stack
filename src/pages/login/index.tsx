@@ -6,11 +6,13 @@ import Input from '../../components/Input';
 import { useHistory } from "react-router-dom";
 
 import { useAuth } from "../../hooks/auth";
+import { useToast } from '../../hooks/toast';
 
 
 
 function Login() {
-const history = useHistory();
+    const history = useHistory();
+    const { addToast } = useToast();
 
   const [username,setUsername] = useState<string>("");
   const [password,setPassword] = useState<string>("");
@@ -23,8 +25,19 @@ const history = useHistory();
         name:username,
         password:password
       });
+      addToast({
+        type: 'success',
+        title: 'Sucesso',
+        description: 'Login concluído',
+      });
       history.push("/list");
-    } catch (err) {}
+    } catch (err) {
+        addToast({
+            type: 'error',
+            title: 'Erro',
+            description: err?.response?.data?.message,
+          });
+    }
   }
 
   return (
