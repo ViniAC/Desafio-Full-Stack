@@ -18,7 +18,7 @@ class UpdatePersonController {
         } = request.body;
         const updatePersonUseCase = container.resolve(UpdatePersonUseCase);
         console.log(dataNasc);
-        await updatePersonUseCase.execute({
+        const updated = await updatePersonUseCase.execute({
             id,
             nome,
             sexo,
@@ -29,7 +29,7 @@ class UpdatePersonController {
             inactive,
             cpf,
         });
-        return response.status(201).send();
+        return response.status(201).json(updated);
     }
 }
 

@@ -27,26 +27,25 @@ export class CreateUser1626471754879 implements MigrationInterface {
                         type: "varchar",
                     },
 
-                    { name: "sexo", type: "varchar", isNullable: true },
+                    { name: "sexo", type: "varchar", default: "''" },
 
                     {
                         name: "email",
 
                         type: "varchar",
 
-                        isNullable: true,
+                        default: "''",
                     },
 
-                    { name: "dataNasc", type: "date" },
+                    { name: "dataNasc", type: "timestamp with time zone" },
 
-                    { name: "naturalidade", type: "varchar", isNullable: true },
+                    { name: "naturalidade", type: "varchar", default: "''" },
 
                     {
                         name: "nacionalidade",
 
                         type: "varchar",
-
-                        isNullable: true,
+                        default: "''",
                     },
 
                     { name: "cpf", type: "varchar", isUnique: true },

@@ -20,7 +20,7 @@ class Person {
     @Column()
     email?: string;
 
-    @Column()
+    @Column("timestamp with time zone")
     dataNasc: Date;
 
     @Column()
