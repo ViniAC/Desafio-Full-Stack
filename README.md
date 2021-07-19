@@ -36,7 +36,7 @@ Após ser feita a instalação
 npm run start
 ```
 
-Usuário padrão
+## Usuário padrão
 ```bash
 - login: admin
 - senha: admin123
