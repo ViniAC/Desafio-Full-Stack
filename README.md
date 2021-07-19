@@ -65,3 +65,9 @@ npm run typeorm migration:run
 http://localhost:3333/api-docs/
 ```
 
+## Usuário padrão
+```bash
+- login: admin
+- senha: admin123
+```
+    
