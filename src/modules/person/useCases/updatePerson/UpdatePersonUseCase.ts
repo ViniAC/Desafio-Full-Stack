@@ -32,10 +32,12 @@ class UpdatePersonUseCase {
     }: IRequest): Promise<Person> {
         const person = await this.personsRepository.findById(id);
         if (!person) {
-            throw new AppError("Person not found!");
+            throw new AppError("Pessoa não encontrada!");
         }
+
         console.log(dataNasc);
         console.log(person.dataNasc);
+        console.log(typeof dataNasc);
 
         person.nome = nome;
         person.sexo = sexo;

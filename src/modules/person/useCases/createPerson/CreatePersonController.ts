@@ -42,7 +42,7 @@ class CreatePersonController {
             inactive,
             cpf,
         });
-        return response.status(201).send();
+        return response.json({ message: "Created" });
     }
 }
 

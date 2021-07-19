@@ -1,0 +1,360 @@
+{
+    "openapi":"3.0.0",
+    "info": {
+        "title":"Project Documentation",
+        "description":"API Rent",
+        "version": "1.0.0",
+        "contact": {
+            "email":"viniciuskj.vc@gmail.com"
+            }
+    },
+    
+    "components":{
+        "securitySchemes":{
+            "BasicAuth":{
+                "type":"http",
+                "scheme":"basic",
+                "example": "Basic YWRtaW46YWRtaW4xMjM="
+            }
+        },
+        "schemas":{
+            "apiResultDate":{
+                "tags":["Person"],
+                "type":"object",
+                "properties":{
+                    "message":{
+                        "type":"string",
+                        "example":"Data de nascimento é obrigatória"
+                    }
+                }
+            },"apiResultName":{
+                "tags":["Person"],
+                "type":"object",
+                "properties":{
+                    "message":{
+                        "type":"string",
+                        "example":"Nome é obrigatório"
+                    }
+                }
+            },"apiResultEmail":{
+                "tags":["Person"],
+                "type":"object",
+                "properties":{
+                    "message":{
+                        "type":"string",
+                        "example":"Email inválido"
+                    }
+                }
+            },"apiResultCpf":{
+                "tags":["Person"],
+                "type":"object",
+                "properties":{
+                    "message":{
+                        "type":"string",
+                        "example":"cpf inválido"
+                    }
+                }
+            },"apiResultDelete":{
+                "tags":["Person"],
+                "type":"object",
+                "properties":{
+                    "message":{
+                        "type":"string",
+                        "example":"Pessoa não encontrada!"
+                    }
+                }
+            },"apiResultLoginUserCredentials":{
+                "tags":["User"],
+                "type":"object",
+                "properties":{
+                    "message":{
+                        "type":"string",
+                        "example":"Credenciais incorretas"
+                    }
+                }
+            },"apiResultLoginUserExist":{
+                "tags":["User"],
+                "type":"object",
+                "properties":{
+                    "message":{
+                        "type":"string",
+                        "example":"usuário não existe"
+                    }
+                }
+            }
+        }
+    },
+    "paths":{
+        "/persons": {
+            "post": {
+                "tags":["Person"],
+                "summary": "Criar pessoa",
+                "security":[{"BasicAuth":[]}],
+                "description": "Criar uma nova pessoa",
+                "requestBody": {
+                    "content":{
+                        "aplication/json":{
+                            "schema":{
+                                "type":"object",
+                                "properties": {
+                                    "nome":{
+                                        "type": "string",
+                                        "required":true
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "dataNasc":{
+                                        "type":"date",
+                                        "required":true
+                                    },
+                                    "cpf":{
+                                        "type":"string",
+                                        "required":true
+                                    },
+                                    "sexo":{
+                                        "type":"string"
+                                    },
+                                    "naturalidade":{
+                                        "type":"string"
+                                    },
+                                    "nacionalidade":{
+                                        "type":"string"
+                                    }
+                                },
+                                "example":{
+                                    "nome":"Vinícius",
+                                    "dataNasc":"2000/01/28",
+                                    "email":"viniciuskj.vc@gmail.com",
+                                    "cpf":"70394529448",
+                                    "sexo":"masculino",
+                                    "naturalidade":"Recife, Pernambuco",
+                                    "nacionalidade":"brasileira"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "201":{
+                        "description":"Success"
+                    },
+                    "400":{
+                            "description":"Error",
+                            "content":{
+                                "aplication/json":{
+                                    "schema":{
+                                        "oneOf":[
+                                            {"$ref":"#/components/schemas/apiResultDate"},
+                                            {"$ref":"#/components/schemas/apiResultName"},
+                                            {"$ref":"#/components/schemas/apiResultEmail"},
+                                            {"$ref":"#/components/schemas/apiResultCpf"}
+                                        ]
+                                    }
+                                }
+                            }                  
+                    }                    
+                }
+            },"get": {
+                "tags":["Person"],
+                "summary": "Listar usuários",
+                "security":[{"BasicAuth":[]}],
+                "description": "Listar usuários ativos",
+                "responses":{
+                    "200":{
+                        "description":"Ok"
+                    }                   
+                }
+            },"put": {
+                "tags":["Person"],
+                "summary": "Editar Pessoa",
+                "security":[{"BasicAuth":[]}],
+                "description": "Editar uma pessoa",
+                "requestBody": {
+                    "content":{
+                        "aplication/json":{
+                            "schema":{
+                                "type":"object",
+                                "properties": {
+                                    "nome":{
+                                        "type": "string",
+                                        "required":true
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "dataNasc":{
+                                        "type":"date",
+                                        "required":true
+                                    },
+                                    "cpf":{
+                                        "type":"string",
+                                        "required":true
+                                    },
+                                    "sexo":{
+                                        "type":"string"
+                                    },
+                                    "naturalidade":{
+                                        "type":"string"
+                                    },
+                                    "nacionalidade":{
+                                        "type":"string"
+                                    }
+                                },
+                                "example":{
+                                    "nome":"Vinícius",
+                                    "dataNasc":"2000/01/28",
+                                    "email":"viniciuskj.vc@gmail.com",
+                                    "cpf":"70394529448",
+                                    "sexo":"masculino",
+                                    "naturalidade":"Recife, Pernambuco",
+                                    "nacionalidade":"brasileira"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "201":{
+                        "description":"Success"
+                    },
+                    "400":{
+                            "description":"Error",
+                            "content":{
+                                "aplication/json":{
+                                    "schema":{
+                                        "oneOf":[
+                                            {"$ref":"#/components/schemas/apiResultDate"},
+                                            {"$ref":"#/components/schemas/apiResultName"},
+                                            {"$ref":"#/components/schemas/apiResultEmail"},
+                                            {"$ref":"#/components/schemas/apiResultCpf"}
+                                        ]
+                                    }
+                                }
+                            }                  
+                    }                    
+                }
+            },"patch": {
+                "tags":["Person"],
+                "summary": "Deletar Pessoa",
+                "security":[{"BasicAuth":[]}],
+                "description": "Deleta uma Pessoa",
+                "requestBody": {
+                    "content":{
+                        "aplication/json":{
+                            "schema":{
+                                "type":"object",
+                                "properties": {
+                                    "id":{
+                                        "type": "string",
+                                        "required":true
+                                    }
+                                },
+                                "example":{
+                                    "id":"deb33372-9250-4e4c-8ebd-4e19a1da480c"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "201":{
+                        "description":"Success"
+                    },
+                    "400":{
+                            "description":"Error",
+                            "content":{
+                                "aplication/json":{
+                                    "schema":{
+                                        "$ref":"#/components/schemas/apiResultDelete"
+                                }
+                            }                  
+                    }                    
+                }
+            }
+            }
+        },"/persons/{id}":{
+            "get": {
+                "tags":["Person"],
+                "summary": "Encontrar Pessoa pelo Id",
+                "security":[{"BasicAuth":[]}],
+                "description": "Retorna uma Pessoa",
+                "parameters":[
+                    {"in":"path","name":"id",
+                        "schema":{
+                            "type":"string"
+                        },
+                        "description":"id do usuário",
+                        "required":true
+                    }],
+                "responses":{
+                    "201":{
+                        "description":"Success"
+                    },
+                    "400":{
+                            "description":"Error",
+                            "content":{
+                                "aplication/json":{
+                                    "schema":{
+                                        "oneOf":[
+                                            {"$ref":"#/components/schemas/apiResultDate"},
+                                            {"$ref":"#/components/schemas/apiResultName"},
+                                            {"$ref":"#/components/schemas/apiResultEmail"},
+                                            {"$ref":"#/components/schemas/apiResultCpf"}
+                                        ]
+                                    }
+                                }
+                            }                  
+                    }                    
+                }
+            }
+        },"/users": {
+            "post": {
+                "tags":["User"],
+                "summary": "Login usuário",
+                "description": "loga o usuário",
+                "requestBody": {
+                    "content":{
+                        "aplication/json":{
+                            "schema":{
+                                "type":"object",
+                                "properties": {
+                                    "nome":{
+                                        "type": "string",
+                                        "required":true
+                                    },
+                                    "senha": {
+                                        "type": "string",
+                                        "required":true
+                                    }
+                                },
+                                "example":{
+                                    "nome":"admin",
+                                    "senha":"admin123"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "201":{
+                        "description":"Success"
+                    },
+                    "401":{
+                            "description":"Unauthorized",
+                            "content":{
+                                "aplication/json":{
+                                    "schema":{
+                                        "oneOf":[
+                                            {"$ref":"#/components/schemas/apiResultLoginUserCredentials"},
+                                            {"$ref":"#/components/schemas/apiResultLoginUserExist"}
+                                        ]
+                                    }
+                                }
+                            }                  
+                    }                    
+                }
+            }
+        }
+    }}
+

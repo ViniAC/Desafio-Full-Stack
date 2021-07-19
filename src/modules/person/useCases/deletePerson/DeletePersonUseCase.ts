@@ -16,7 +16,7 @@ class DeletePersonUseCase {
     async execute({ id }: IRequest): Promise<Person> {
         const person = await this.personsRepository.findById(id);
         if (person.inactive) {
-            throw new AppError("Person not found!");
+            throw new AppError("Pessoa não encontrada!");
         }
 
         person.inactive = !person.inactive;

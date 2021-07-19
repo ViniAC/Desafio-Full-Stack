@@ -20,7 +20,7 @@ class LoginUserUseCase {
         }
         const match = await compare(senha, userBD.senha);
         if (!match) {
-            throw new AppError("Wrong credentials", 401);
+            throw new AppError("Credenciais incorretas", 401);
         }
     }
 }

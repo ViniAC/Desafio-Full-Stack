@@ -16,9 +16,12 @@ export async function ensureAutenticated(
     }
     const usersRepository = new UsersRepository();
     const userBD = await usersRepository.findByName(user.name);
+    if (!userBD) {
+        throw new AppError("Usuário não encontrado", 401);
+    }
     const match = await compare(user.pass, userBD.senha);
     if (!match) {
-        throw new AppError("Wrong credentials", 401);
+        throw new AppError("Credenciais incorretas", 401);
     }
 
     next();
