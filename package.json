@@ -17,6 +17,7 @@
     "@types/uuidv4": "^5.0.0",
     "axios": "^0.21.1",
     "base-64": "^1.0.0",
+    "css-mediaquery": "^0.1.2",
     "react": "^17.0.2",
     "react-date-picker": "^8.2.0",
     "react-datepicker": "^4.1.1",

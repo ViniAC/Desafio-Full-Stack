@@ -1,85 +1,11 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import api from '../../services/api'
 import {GoTrashcan} from 'react-icons/go'
 import {FaRegEdit} from 'react-icons/fa'
+import {Button,Container,Table, Thead, TableRow,TableHead,TableTd, Tbody,ButtonBack} from './styles'
+import { useToast } from '../../hooks/toast';
 
-  import { useToast } from '../../hooks/toast';
-const Button = styled.button`
-    /* Adapt The colors based on primary prop */
-    background: palevioleTred;
-    color: white;
-    font-size: 1em;
-    margin: 1em;
-    padding: 0.15em 0.50em;
-    border: 2px solid palevioleTred;
-    border-radius: 3px;
-    :hover{
-        background-color:red;
-        transition: 600ms;
-    };
-    :active {
-        top:2px;
-    }
-`;
-
-const Container = styled.div`
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: Translate(-50%, -50%);
-    color:white;
-`;
-const Th = styled.th`
-    padding: 15px;
-    background-color: rgba(255, 255, 255, 0.2);
-    color: #fff;
-    ext-align: left;
-`;
-const Td = styled.td`
-    padding: 15px;
-    background-color: rgba(255, 255, 255, 0.2);
-    color: #fff;
-`;
-const Thead = styled.thead`
-    ${`Th`} {
-        background-color: #55608f;
-    }
-`;
-const Tbody = styled.tbody`
-    TableRow {
-		&:hover {
-			background-color: rgba(255,255,255,0.3);
-		}
-	}
-	td {
-		position: relative;
-		&:hover {
-			&:before {
-				content: "";
-				position: absolute;
-				left: 0;
-				right: 0;
-				top: -9999px;
-				bottom: -9999px;
-				background-color: rgba(255,255,255,0.2);
-				z-index: -1;
-			}
-		}
-	}
-`;
-const Table = styled.table`
-    width: 800px;
-    border-collapse: collapse;
-    overflow: hidden;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-`;
-const TableRow = styled.tr``;
-const TableHead = styled.th`
-`;
-const TableTd =styled.td`
-padding-left:40px;`
 
 interface User {
     id: string;
@@ -91,7 +17,7 @@ interface User {
 
 const List = () => {
     const { addToast } = useToast();
-
+    const history = useHistory();
     const [users, setUsers] = useState<User[]>();
     useEffect(() => {
         api.get("/persons").then((json) => {
@@ -127,7 +53,9 @@ const List = () => {
 
     return (
         <Container>
+            <ButtonBack onClick={() => history.push('/register')}>Adicionar</ButtonBack>
             <Table>
+
                 <Thead>
                     <TableRow>
                         <TableHead>Nome</TableHead>
@@ -172,7 +100,9 @@ const List = () => {
                 );
             })}
                 </Tbody>
+
             </Table>
+
         </Container>
     );
 };

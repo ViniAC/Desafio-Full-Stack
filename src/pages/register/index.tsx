@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams,useHistory } from "react-router-dom";
 import styled, { createGlobalStyle } from "styled-components";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
@@ -29,8 +29,8 @@ const MainContainer = styled.div`
     text-transform: uppercase;
     letter-spacing: 0.4rem;
     @media only screen and (max-width: 320px) {
-        width: 80vw;
-        height: 90vh;
+        width: 70vw;
+        height: 80vh;
         hr {
             margin-bottom: 0.3rem;
         }
@@ -39,28 +39,28 @@ const MainContainer = styled.div`
         }
     }
     @media only screen and (min-width: 360px) {
-        width: 80vw;
-        height: 90vh;
+        width: 70vw;
+        height: 80vh;
         h4 {
             font-size: small;
         }
     }
     @media only screen and (min-width: 411px) {
-        width: 80vw;
-        height: 90vh;
+        width: 70vw;
+        height: 80vh;
     }
 
     @media only screen and (min-width: 768px) {
-        width: 80vw;
-        height: 90vh;
+        width: 70vw;
+        height: 80vh;
     }
     @media only screen and (min-width: 1024px) {
         width: 70vw;
-        height: 90vh;
+        height: 80vh;
     }
     @media only screen and (min-width: 1280px) {
         width: 70vw;
-        height: 90vh;
+        height: 80vh;
     }
 `;
 
@@ -94,12 +94,38 @@ const Form = styled.form`
     width: 100%;
     align-items: center;
 `;
+const StyledInput = styled.input`
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  border-radius: 2rem;
+  margin:0;
+  width: 80%;
+  height: 3rem;
+  padding: 1rem;
+  border: none;
+  outline: none;
+  color: #3c354e;
+  border-color: rgba(31, 38, 135, 0.37);
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 6px;
+  &:focus {
+    display: inline-block;
+    box-shadow: 0 0 0 0.2rem #b9abe0;
+    backdrop-filter: blur(12rem);
+    border-radius: 2rem;
+  }
+  &::placeholder {
+    color: #b9abe099;
+    font-weight: 100;
+    font-size: 1rem;
+  }
+`;
 const DatePickerContainer = styled.div`
     display: flex;
-    width: 82%;
+    width: 83%;
 
     .react-date-picker__wrapper {
-        margin-left: 6px;
+        margin-right:1rem;
         box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
         border-radius: 2rem;
         border: 1px;
@@ -108,9 +134,21 @@ const DatePickerContainer = styled.div`
         background-color:white;
         border-color: rgba(31, 38, 135, 0.37);
         margin-bottom: 4px;
+        margin-left:6px;
   }
-
 `;
+const ButtonBack = styled.button`
+text-transform: uppercase;
+  letter-spacing: 0.2rem;
+  width: 10%;
+  height: 3rem;
+  border: none;
+  color: black;
+  border-radius: 2rem;
+  cursor: pointer;
+  margin:5px;
+`;
+
 
 
 
@@ -137,46 +175,87 @@ interface Params {
     cpf: '',
   }
 function Register() {
-    const [date, setDate] = useState(new Date());
+    const history = useHistory();
+    const [date, setDate] = useState<Date | null>(null);
     const [person, setPerson] = useState<Person>(defaultPerson);
     const { id }: Params = useParams();
     const { addToast } = useToast();
+
     useEffect( () => {
         async function fetchData() {
-        console.log(id)
+        try{
         if(id){
             await api.get(`/persons/${id}`).then((response):Person | void => {
             const newDate = response.data.dataNasc
-            response.data.dataNasc = new Date(newDate);
             setPerson(response.data);
             setDate(new Date(newDate))
               });
         }
-    }
-        fetchData()
-    },[id])
+        }catch(err){
+        history.push("/list");
+        }
+        }
+            fetchData()
+    },[id,history])
 
-    const handleSubmit = async (e: any)=> {
+    useEffect(() => {console.log(date)},[date])
+    const handleSubmitEdit = async (e: any)=> {
         e.preventDefault();
-
+        const BPerson = person;
         try{
-            console.log(date)
+            if(date){
             setPerson({...person,dataNasc: date.toISOString()})
             const sendData = {
                 ...person,dataNasc: date.toISOString()
             }
+
             await api.put("/persons", {...sendData}).then((json)=> {
+                setPerson(json.data)
                     addToast({
                         type: 'success',
                         title: 'Sucesso',
                         description: 'Usuário alterado!',
                       });
+                history.push('/list')
             });
+        }
+        }catch(err){
+            setPerson(BPerson)
+            addToast({
+                type: 'error',
+                title: 'Erro',
+                description: err?.response?.data?.message,
+              });
+        }
+    }
+    const handleSubmit = async (e: any)=> {
+        e.preventDefault();
+        try{
+            if(date){
+            setPerson({...person,dataNasc: date.toISOString()})
+            const sendData = {
+                ...person,dataNasc: date.toISOString()
+            }
+            await api.post("/persons", {...sendData}).then((json)=> {
+                setPerson(json.data)
+                    addToast({
+                        type: 'success',
+                        title: 'Sucesso',
+                        description: 'Usuário alterado!',
+                      });
+                history.push("/list");
+            });
+            }else {addToast({
+                type: 'error',
+                title: 'Erro',
+                description: 'Data invalida!',
+              });
+            }
         }catch(err){
             addToast({
                 type: 'error',
                 title: 'Erro',
-                description: "Erro ao alterar usuário",
+                description: err?.response?.data?.message,
               });
         }
     }
@@ -190,7 +269,7 @@ function Register() {
                         <Input type="text" placeholder="Email" onChange={(e: React.ChangeEvent<HTMLInputElement>)=> {setPerson({...person,email:e.target.value})}}value={person.email}/>
 
                         <DatePickerContainer>
-                        <Input type="text" placeholder="Sexo" onChange={(e: React.ChangeEvent<HTMLInputElement>)=> {setPerson({...person,sexo:e.target.value})}}value={person.sexo}/>
+                        <StyledInput type="text" placeholder="Sexo" onChange={(e: React.ChangeEvent<HTMLInputElement>)=> {setPerson({...person,sexo:e.target.value})}}value={person.sexo}/>
                         <DatePicker
                             className="datePicker"
                             onChange={setDate}
@@ -204,8 +283,9 @@ function Register() {
                     </Form>
                 </InputContainer>
                 <ButtonContainer>
-                    <Button content={id ? "Salvar" :"Registrar"} onClick={(e: React.ChangeEvent<HTMLInputElement>)=> handleSubmit(e)}></Button>
+                    <Button content={id ? "Salvar" :"Registrar"} onClick={(e: React.ChangeEvent<HTMLInputElement>)=> {id ? handleSubmitEdit(e): handleSubmit(e)}}></Button>
                 </ButtonContainer>
+        <ButtonBack onClick={() => history.push('/list')}>Voltar</ButtonBack>
             </MainContainer>
         </Container>
     );
