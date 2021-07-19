@@ -35,10 +35,6 @@ class UpdatePersonUseCase {
             throw new AppError("Pessoa não encontrada!");
         }
 
-        console.log(dataNasc);
-        console.log(person.dataNasc);
-        console.log(typeof dataNasc);
-
         person.nome = nome;
         person.sexo = sexo;
         person.email = email;

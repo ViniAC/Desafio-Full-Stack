@@ -20,7 +20,6 @@ class UpdatePersonController {
             cpf,
         } = request.body;
         const updatePersonUseCase = container.resolve(UpdatePersonUseCase);
-        console.log(dataNasc);
         if (new Date(dataNasc) === undefined) {
             throw new AppError("Data invalida", 400);
         }

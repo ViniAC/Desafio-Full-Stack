@@ -16,7 +16,6 @@ var CreateUserService = /** @class */ (function () {
     }
     CreateUserService.prototype.execute = function (_a) {
         var name = _a.name, sexo = _a.sexo;
-        console.log(name, sexo);
     };
     return CreateUserService;
 }());

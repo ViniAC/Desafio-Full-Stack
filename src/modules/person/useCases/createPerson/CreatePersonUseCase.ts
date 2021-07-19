@@ -32,19 +32,21 @@ class CreatePersonUseCase {
         const personAlreadyExists = await this.personsRepository.findByData(
             cpf
         );
-        if (personAlreadyExists && personAlreadyExists.inactive === false) {
-            throw new AppError("Usuário já existe!");
-        }
-        if (personAlreadyExists.inactive === true) {
-            personAlreadyExists.nome = nome;
-            personAlreadyExists.sexo = sexo;
-            personAlreadyExists.email = email;
-            personAlreadyExists.dataNasc = dataNasc;
-            personAlreadyExists.naturalidade = naturalidade;
-            personAlreadyExists.nacionalidade = nacionalidade;
-            personAlreadyExists.inactive = false;
+        if (personAlreadyExists) {
+            if (personAlreadyExists.inactive === false) {
+                throw new AppError("Usuário já existe!");
+            }
+            if (personAlreadyExists.inactive === true) {
+                personAlreadyExists.nome = nome;
+                personAlreadyExists.sexo = sexo;
+                personAlreadyExists.email = email;
+                personAlreadyExists.dataNasc = dataNasc;
+                personAlreadyExists.naturalidade = naturalidade;
+                personAlreadyExists.nacionalidade = nacionalidade;
+                personAlreadyExists.inactive = false;
 
-            await this.personsRepository.save(personAlreadyExists);
+                await this.personsRepository.save(personAlreadyExists);
+            }
         } else {
             this.personsRepository.create({
                 nome,

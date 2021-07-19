@@ -18,7 +18,7 @@ class CreatePersonController {
             inactive,
             cpf,
         } = request.body;
-        if (dataNasc === null) {
+        if (new Date(dataNasc) === undefined) {
             throw new AppError("Data de nascimento é obrigatória", 400);
         }
         if (nome === "") {

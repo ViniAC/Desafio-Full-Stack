@@ -11,7 +11,6 @@ class GetPersonController {
         const person = await getPersonUseCase.execute({
             id,
         });
-        console.log(person);
         return response.json(person);
     }
 }
